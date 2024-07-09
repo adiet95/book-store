@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package greet;
-option go_package = "github.com/adiet95/book-store/auth-service";
+option go_package = "github.com/adiet95/order-store/auth-service";
 
 message AuthRequest {
   string token = 1;

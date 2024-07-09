@@ -27,7 +27,7 @@ Notes :
 
 ## Several command you must know in this app :
 ```bash
-   Notes : First of all, Change Directory you want. e.g auth-service, book-service, 
+   Notes : First of all, Change Directory you want. e.g auth-service, order-service, 
    author-service, category-service
 ```
 

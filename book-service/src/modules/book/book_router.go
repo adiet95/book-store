@@ -11,7 +11,7 @@ func New(rt *gin.Engine, db *gorm.DB) {
 	svc := NewService(repo)
 	ctrl := NewCtrl(svc)
 
-	route := rt.Group("/book").Use(middleware.CheckAuth())
+	route := rt.Group("/order").Use(middleware.CheckAuth())
 	{
 		route.POST("", middleware.CheckAuthor(), ctrl.Add)
 		route.PUT("", middleware.CheckAuthor(), ctrl.Update)
