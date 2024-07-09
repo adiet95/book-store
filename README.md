@@ -1,41 +1,36 @@
-# Go-Order-API
-Simple app product order with Gin-Gonic HTTP Respons Framework, GORM for Object relation model, PostgreSQL for database.
+# Book Store
+Simple app borrowing Books with Gin-Gonic HTTP Respons Framework, GORM for Object relation model, PostgreSQL for database.
 
 ## 🔗 Description
 
-This Backend Application is used for simple order product, in this application there are two models / ERD Schema likes User / Costumer & Products.
+This Backend Application is used for simple order book, in this application there are two models / ERD Schema likes User, Book, Author & Category.
 Also have several features like JWT, Authentification & Authorization.
-There are 3 main modules :
-1. Customer Management (Get with paginate, Get Detail, Insert, Update, Delete,
-   Search)
-2. Order Management (Get with paginate, Get Detail, Insert, Update, Delete,
-   Search)
-3. Authentikasi Management (Get Login Data, Insert Login Data)
+There are 4 main services :
+1. Book Management (Get with paginate, Get Detail, Insert, Update, Delete,
+   Search & Borrowing Book)
+2. Author Management (Get with paginate, Get Detail, Insert, Update, Delete, Search)
+3. Category Management (Get with paginate, Get Detail, Insert, Update, Delete, Search)
+4. User Management (Get Login Data, Insert Login Data)
 
 Notes :
-1. I'am using UUID for user_id, don't forget to create extenxion in SQL console after create the database with this query below :
-```bash
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-```
-
-2. In this application there are two types of users (Roles). admins and costumer.
+1. In this application there are two types of users (Roles). admins and user.
    Admin can do *Costumer Management* but Role Costumer can't, Registration page can only register Costumer roles, Admins can only be registered through seeding data.
 
 <h2 align="center">
  ERD (Entity Relation Database)
 </h2>
-<p align="center"><img src="https://res.cloudinary.com/dw5qffbop/image/upload/v1665874871/erd_c15gne.png" alt="erd.jpg" /></p>
+<p align="center"><img src="https://res.cloudinary.com/dw5qffbop/image/upload/v1720514738/Screenshot_2024-07-09_153934_m0bzlk.png" alt="erd.jpg" /></p>
 
 <h2 align="center">
  Table Specification
 </h2>
 
-<h3 align="center">Costumer's Table</h3>
-<p align="center"><img src="https://res.cloudinary.com/dw5qffbop/image/upload/v1665882605/table-cost_miwqjk.png" alt="cost.jpg" /></p>
-<h3 align="center">Order's Table</h3>
-<p align="center"><img src="https://res.cloudinary.com/dw5qffbop/image/upload/v1665882605/table-user_sz493j.png" alt="order.jpg" /></p>
-
 ## Several command you must know in this app :
+```bash
+   Notes : First of all, Change Directory you want. e.g auth-service, book-service, 
+   author-service, category-service
+```
+
 ```bash
 1. go run . serve //to run the app / server
 2. go run . migrate -u //for database migration
@@ -49,7 +44,7 @@ go run . migrate -d //for rollback
 1. Clone the repository
 
 ```bash
-https://github.com/adiet95/go-order-api.git
+https://github.com/adiet95/book-store.git
 ```
 
 2. Install dependencies
@@ -66,12 +61,14 @@ go mod vendor
 3. Add Env File
 
 ```sh
-  DB_USER = Your DB User
-  DB_HOST = Your DB Host
-  DB_NAME = Your DB Name
-  DB_PASS = Your DB Password
-  JWT_KEYS = Your JWT Key
-  PORT = Your Port
+  DB_USER="YOUR DB USER"
+  DB_HOST="YOUR DB HOST"
+  DB_NAME="book-store"
+  DB_PASS="YOUR DB PASSWORD"
+  JWT_KEYS="YOUR KEYS"
+  PORT=":8080"
+  GRPC_ADDRESS=":8085"
+  DB_PORT="5432"
 ```
 
 4. Database Migration and Rollback
@@ -247,131 +244,6 @@ _Request Query Params_
 name = (Search data by full_name)
 ```
 
-### GET /order
-
-> Get Data Order
-
-_Request Header_
-```
-Bearer Token
-```
-
-_Request Body_
-```
-not needed
-```
-_Request Query Params_
-```
-limit = (limit for pagination)
-offset = (offset for pagination)
-```
-
-### POST /order
-
-> Post Data Order
-
-_Request Header_
-```
-Bearer Token
-```
-
-_Request Body_
-```
-{
-    "order_name" : "Test",
-    "invoice" : "test inv",
-    "address" : "test address",
-    "telphone" : "0813",
-    "amount" : 2,
-    "price" : 10000,
-    "status" : "paid"
-}
-```
-_Request Query Params_
-```
-no need
-```
-
-### PUT /order
-
-> Update Data Order
-
-_Request Header_
-```
-Bearer Token
-```
-
-_Request Body_
-```
-{
-    "order_name" : "Test",
-    "invoice" : "test inv",
-    "address" : "test address",
-    "telphone" : "0813",
-    "amount" : 2,
-    "price" : 10000,
-    "status" : "paid"
-}
-```
-_Request Query Params_
-```
-id = (id you want to update)
-```
-
-### DELETE /order
-
-> Delete Data Order
-
-_Request Header_
-```
-Bearer Token
-```
-
-_Request Body_
-```
-no need
-```
-_Request Query Params_
-```
-id = (Delete by id)
-```
-
-### GET /order/detail
-
-> Get Data Detail by ID
-
-_Request Header_
-```
-Bearer Token
-```
-
-_Request Body_
-```
-no need
-```
-_Request Query Params_
-```
-id = (Get detail data by id)
-```
-
-### GET /order/search
-
-> Search Data Order by Name
-
-_Request Header_
-```
-Bearer Token
-```
-
-_Request Body_
-```
-no need
-```
-_Request Query Params_
-```
-name = (Search data by name)
-```
-
 ## 💻 Built with
 
 - [Golang](https://go.dev/): Go Programming Language
@@ -381,4 +253,4 @@ name = (Search data by name)
 
 ## 🚀 About Me
 
-- Linkedin : [Achmad Shiddiq](https://www.linkedin.com/in/achmad-shiddiq-alimudin/)
+- Linkedin : [Achmad Shiddiq](https://www.linkedin.com/in/adiet-alimudin/)
