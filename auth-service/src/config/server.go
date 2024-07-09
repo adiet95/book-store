@@ -10,11 +10,11 @@ import (
 
 var ServeCmd = &cobra.Command{
 	Use:   "serve",
-	Short: "start apllication",
-	RunE:  server,
+	Short: "start apllication http",
+	RunE:  Server,
 }
 
-func server(cmd *cobra.Command, args []string) error {
+func Server(cmd *cobra.Command, args []string) error {
 	if mainRoute, err := routers.New(); err == nil {
 		var addrs string = os.Getenv("PORT")
 

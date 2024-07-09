@@ -18,10 +18,10 @@ import (
 var GrpcServeCmd = &cobra.Command{
 	Use:   "serve-grpc",
 	Short: "start apllication",
-	RunE:  grpcServerCmd,
+	RunE:  GrpcServerCmd,
 }
 
-func grpcServerCmd(cmd *cobra.Command, args []string) error {
+func GrpcServerCmd(cmd *cobra.Command, args []string) error {
 	addr := fmt.Sprintf(":%s", os.Getenv("GRPC_PORT"))
 	fmt.Println(addr, "<<ADDR")
 	listen, err := net.Listen("tcp", addr)
