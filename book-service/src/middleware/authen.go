@@ -1,8 +1,13 @@
 package middleware
 
 import (
+	"context"
+	"fmt"
+	"google.golang.org/grpc"
+	"os"
 	"strings"
 
+	pb "github.com/adiet95/book-store/book-service/src/database/grpc-model"
 	"github.com/adiet95/book-store/book-service/src/libs"
 	"github.com/gin-gonic/gin"
 )
@@ -17,13 +22,31 @@ func CheckAuth() gin.HandlerFunc {
 		}
 		token := strings.Replace(headerToken, "Bearer ", "", -1)
 
-		checkToken, err := libs.CheckToken(token)
+		conn, err := grpc.NewClient(os.Getenv("GRPC_ADDRESS"), grpc.WithInsecure())
 		if err != nil {
+			errStr := fmt.Sprintf("Error mysql connection %s", err.Error())
+			libs.New(errStr, 401, true)
+			panic(err)
+		}
+		clientGrpc := pb.NewAuthenticationClient(conn)
+		req := pb.AuthRequest{Token: token}
+		tokenData, err := clientGrpc.ValidateToken(context.Background(), &req)
+		if err != nil {
+			libs.New(err.Error(), 400, true).Send(c)
+			c.Abort()
+		}
+
+		if tokenData != nil {
+			if tokenData.IsValidate != true {
+				libs.New(err.Error(), 401, true).Send(c)
+				c.Abort()
+			}
+		} else {
 			libs.New(err.Error(), 401, true).Send(c)
 			c.Abort()
 		}
 
-		c.Set("email", checkToken.Email)
+		c.Set("validate", tokenData.IsValidate)
 		c.Next()
 	}
 }

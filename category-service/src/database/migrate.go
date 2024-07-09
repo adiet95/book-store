@@ -30,7 +30,7 @@ func dbMigrate(cmd *cobra.Command, args []string) error {
 	}
 	m := gormigrate.New(db, gormigrate.DefaultOptions, []*gormigrate.Migration{
 		{
-			ID: "001",
+			ID: "004",
 			Migrate: func(tx *gorm.DB) error {
 				return tx.AutoMigrate(&models.Category{})
 			},

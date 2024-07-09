@@ -22,6 +22,9 @@ func NewCtrl(reps interfaces.CategoryService) *category_ctrl {
 func (re *category_ctrl) GetAll(c *gin.Context) {
 	v := c.Request.URL.Query().Get("limit")
 	limit, _ := strconv.Atoi(v)
+	if limit == 0 {
+		limit = 10
+	}
 
 	val := c.Request.URL.Query().Get("offset")
 	offset, _ := strconv.Atoi(val)

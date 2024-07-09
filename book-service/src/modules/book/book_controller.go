@@ -22,6 +22,9 @@ func NewCtrl(reps interfaces.BookService) *book_ctrl {
 func (re *book_ctrl) GetAll(c *gin.Context) {
 	v := c.Request.URL.Query().Get("limit")
 	limit, _ := strconv.Atoi(v)
+	if limit == 0 {
+		limit = 10
+	}
 
 	val := c.Request.URL.Query().Get("offset")
 	offset, _ := strconv.Atoi(val)

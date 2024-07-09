@@ -82,9 +82,9 @@ func (re *user_service) Update(data *models.User, email string) *libs.Response {
 	return libs.New(result, 202, false)
 }
 
-func (re *user_service) Delete(email string) *libs.Response {
+func (re *user_service) Delete(id int) *libs.Response {
 
-	data, err := re.user_repo.DeleteUser(email)
+	data, err := re.user_repo.DeleteUser(id)
 	if err != nil {
 		return libs.New(err.Error(), 400, true)
 	}
@@ -92,12 +92,13 @@ func (re *user_service) Delete(email string) *libs.Response {
 }
 
 func (re *user_service) FindEmail(email string, limit, offset int) *libs.Response {
+	datas := &models.Users{}
 	data, err := re.user_repo.FindByEmail(email)
 	if err != nil {
 		return libs.New(err.Error(), 400, true)
 	}
 	if data.Role == "admin" {
-		datas, err := re.user_repo.FindAll(limit, offset)
+		datas, err = re.user_repo.FindAll(limit, offset)
 		if err != nil {
 			return libs.New(err.Error(), 400, true)
 		}

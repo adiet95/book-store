@@ -30,12 +30,12 @@ func dbMigrate(cmd *cobra.Command, args []string) error {
 	}
 	m := gormigrate.New(db, gormigrate.DefaultOptions, []*gormigrate.Migration{
 		{
-			ID: "001",
+			ID: "003",
 			Migrate: func(tx *gorm.DB) error {
-				return tx.AutoMigrate(&models.User{}, &models.Order{})
+				return tx.AutoMigrate(&models.Book{})
 			},
 			Rollback: func(tx *gorm.DB) error {
-				return tx.Migrator().DropTable(&models.User{}, &models.Order{})
+				return tx.Migrator().DropTable(&models.Book{})
 			},
 		},
 	})

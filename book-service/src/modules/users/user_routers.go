@@ -13,10 +13,10 @@ func New(rt *gin.Engine, db *gorm.DB) {
 
 	route := rt.Group("/user").Use(middleware.CheckAuth())
 	{
-		route.GET("", ctrl.GetAll)
-		route.POST("", middleware.CheckAuthor(), ctrl.Add)
-		route.PUT("", ctrl.Update)
-		route.DELETE("", middleware.CheckAuthor(), ctrl.Delete)
+		route.GET("", middleware.CheckAuthor(), ctrl.GetAll)
+		route.POST("", middleware.CheckAuthor(), middleware.CheckAuthor(), ctrl.Add)
+		route.PUT("", middleware.CheckAuthor(), ctrl.Update)
+		route.DELETE("", middleware.CheckAuthor(), middleware.CheckAuthor(), ctrl.Delete)
 		route.GET("/detail", middleware.CheckAuthor(), ctrl.Search)
 		route.GET("/search", middleware.CheckAuthor(), ctrl.SearchName)
 	}

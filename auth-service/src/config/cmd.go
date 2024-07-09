@@ -11,6 +11,7 @@ var initCommand = cobra.Command{
 
 func init() {
 	initCommand.AddCommand(ServeCmd)
+	initCommand.AddCommand(GrpcServeCmd)
 	initCommand.AddCommand(database.MigrateCmd)
 	initCommand.AddCommand(database.SeedCmd)
 

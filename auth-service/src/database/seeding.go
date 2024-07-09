@@ -20,12 +20,8 @@ func seeder(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	admin, _ := libs.HashPassword("admin12345678")
-	user, _ := libs.HashPassword("user12345678")
 
-	var datas = []models.User{
-		{Email: "admin@gmail.com", Password: admin, Role: "admin"},
-		{Email: "user@gmail.com", Password: user, Role: "user"},
-	}
+	var datas = models.User{Email: "admin@gmail.com", Password: admin, Role: "admin"}
 
 	if res := db.Create(&datas); res.Error != nil {
 		return res.Error

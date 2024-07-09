@@ -16,14 +16,14 @@ func NewRepo(db *gorm.DB) *user_repo {
 }
 
 func (r *user_repo) FindAll(limit, offset int) (*models.Users, error) {
-	var data models.Users
-
-	result := r.db.Model(&data).Limit(limit).Offset(offset).Order("email asc").Find(&data)
+	var datas models.Users
+	var data models.User
+	result := r.db.Model(&data).Limit(limit).Offset(offset).Find(&datas)
 
 	if result.Error != nil {
 		return nil, errors.New("failed obtain datas")
 	}
-	return &data, nil
+	return &datas, nil
 }
 
 func (r *user_repo) Save(data *models.User) (*models.User, error) {
@@ -50,15 +50,15 @@ func (re *user_repo) UpdateUser(data *models.User, email string) (*models.User, 
 	return data, nil
 }
 
-func (re *user_repo) DeleteUser(email string) (*models.User, error) {
+func (re *user_repo) DeleteUser(id int) (*models.User, error) {
 	var data *models.User
-	var datas *models.Users
-	res := re.db.Where("LOWER(email) = ?", email).Find(&datas)
+	//var datas *models.Users
+	res := re.db.Where("user_id = ?", id).First(&data)
 
 	if res.RowsAffected == 0 {
 		return nil, errors.New("data not found")
 	}
-	r := re.db.Model(data).Where("LOWER(email) = ?", email).Delete(&data)
+	r := re.db.Model(data).Where("user_id = ?", id).Delete(&data)
 	if r.Error != nil {
 		return nil, errors.New("failed to delete data")
 	}

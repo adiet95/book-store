@@ -25,9 +25,11 @@ func (re *user_ctrl) GetAll(c *gin.Context) {
 		libs.New("claim user is not exist", 400, true)
 		c.Abort()
 	}
-
 	v := c.Request.URL.Query().Get("limit")
 	limit, _ := strconv.Atoi(v)
+	if limit == 0 {
+		limit = 10
+	}
 
 	val := c.Request.URL.Query().Get("offset")
 	offset, _ := strconv.Atoi(val)
@@ -64,8 +66,9 @@ func (re *user_ctrl) Update(c *gin.Context) {
 }
 
 func (re *user_ctrl) Delete(c *gin.Context) {
-	val := c.Request.URL.Query().Get("email")
-	re.svc.Delete(val).Send(c)
+	val := c.Param("id")
+	id, _ := strconv.Atoi(val)
+	re.svc.Delete(id).Send(c)
 }
 
 func (re *user_ctrl) Search(c *gin.Context) {

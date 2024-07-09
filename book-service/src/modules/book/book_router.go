@@ -13,9 +13,9 @@ func New(rt *gin.Engine, db *gorm.DB) {
 
 	route := rt.Group("/book").Use(middleware.CheckAuth())
 	{
-		route.POST("", ctrl.Add)
-		route.PUT("", ctrl.Update)
-		route.DELETE("", ctrl.Delete)
+		route.POST("", middleware.CheckAuthor(), ctrl.Add)
+		route.PUT("", middleware.CheckAuthor(), ctrl.Update)
+		route.DELETE("", middleware.CheckAuthor(), ctrl.Delete)
 		route.GET("", ctrl.GetAll)
 		route.GET("/search", ctrl.Search)
 		route.GET("/detail", ctrl.SearchId)

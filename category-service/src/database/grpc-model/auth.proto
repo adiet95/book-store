@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package greet;
+option go_package = "github.com/adiet95/book-store/auth-service";
+
+message AuthRequest {
+  string token = 1;
+}
+
+message AuthData {
+  string token = 1;
+  string role = 2;
+  bool isValidate = 3;
+}
+
+message AuthResponse {
+  string token = 1;
+  string role = 2;
+  bool isValidate = 3;
+}
+
+service Authentication {
+  rpc ValidateToken(AuthRequest) returns (AuthResponse){}
+}
