@@ -98,6 +98,12 @@ _Purpose to login as Admin's Role_
 go run . serve
 ```
 
+### If you want to build with docker-compose
+
+```bash
+docker compose build 
+```
+
 ### 🚀 You are all set
 
 ## 🔗 RESTful endpoints
