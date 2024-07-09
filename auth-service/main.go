@@ -15,7 +15,6 @@ var initCommand = cobra.Command{
 
 func main() {
 	args := os.Args[1:]
-	log.Println(args)
 	if len(args) <= 0 {
 		args = []string{"serve"}
 	}

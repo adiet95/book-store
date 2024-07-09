@@ -33,7 +33,7 @@ func (r *author_repo) Save(data *models.Author) (*models.Author, error) {
 }
 
 func (re *author_repo) Update(data *models.Author, id int) (*models.Author, error) {
-	res := re.db.Model(&data).Where("id = ?", id).Updates(&data)
+	res := re.db.Model(&data).Where("author_id = ?", id).Updates(&data)
 
 	if res.Error != nil {
 		return nil, errors.New("failed to update data")
@@ -44,12 +44,12 @@ func (re *author_repo) Update(data *models.Author, id int) (*models.Author, erro
 func (re *author_repo) Delete(id int) (*models.Author, error) {
 	var data *models.Author
 	var datas *models.Authors
-	res := re.db.Where("id = ?", id).Find(&datas)
+	res := re.db.Where("author_id = ?", id).Find(&datas)
 
 	if res.RowsAffected == 0 {
 		return nil, errors.New("data not found")
 	}
-	r := re.db.Model(data).Where("id = ?", id).Delete(&data)
+	r := re.db.Model(data).Where("author_id = ?", id).Delete(&data)
 	if r.Error != nil {
 		return nil, errors.New("failed to delete data")
 	}
@@ -58,7 +58,7 @@ func (re *author_repo) Delete(id int) (*models.Author, error) {
 
 func (re *author_repo) FindByName(name string) (*models.Authors, error) {
 	var datas *models.Authors
-	res := re.db.Order("id asc").Where("LOWER(order_name) LIKE ?", "%"+name+"%").Find(&datas)
+	res := re.db.Order("author_id asc").Where("LOWER(order_name) LIKE ?", "%"+name+"%").Find(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}
@@ -70,7 +70,7 @@ func (re *author_repo) FindByName(name string) (*models.Authors, error) {
 
 func (re *author_repo) FindById(id int) (*models.Authors, error) {
 	var datas *models.Authors
-	res := re.db.Order("id asc").Where("id = ?", id).Find(&datas)
+	res := re.db.Order("author_id asc").Where("author_id = ?", id).Find(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}

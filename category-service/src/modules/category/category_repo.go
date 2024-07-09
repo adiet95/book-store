@@ -33,7 +33,7 @@ func (r *category_repo) Save(data *models.Category) (*models.Category, error) {
 }
 
 func (re *category_repo) Update(data *models.Category, id int) (*models.Category, error) {
-	res := re.db.Model(&data).Where("id = ?", id).Updates(&data)
+	res := re.db.Model(&data).Where("category_id = ?", id).Updates(&data)
 
 	if res.Error != nil {
 		return nil, errors.New("failed to update data")
@@ -44,12 +44,12 @@ func (re *category_repo) Update(data *models.Category, id int) (*models.Category
 func (re *category_repo) Delete(id int) (*models.Category, error) {
 	var data *models.Category
 	var datas *models.Categories
-	res := re.db.Where("id = ?", id).Find(&datas)
+	res := re.db.Where("category_id = ?", id).Find(&datas)
 
 	if res.RowsAffected == 0 {
 		return nil, errors.New("data not found")
 	}
-	r := re.db.Model(data).Where("id = ?", id).Delete(&data)
+	r := re.db.Model(data).Where("category_id = ?", id).Delete(&data)
 	if r.Error != nil {
 		return nil, errors.New("failed to delete data")
 	}
@@ -58,7 +58,7 @@ func (re *category_repo) Delete(id int) (*models.Category, error) {
 
 func (re *category_repo) FindByName(name string) (*models.Categories, error) {
 	var datas *models.Categories
-	res := re.db.Order("id asc").Where("LOWER(category_name) LIKE ?", "%"+name+"%").Find(&datas)
+	res := re.db.Order("category_id asc").Where("LOWER(category_name) LIKE ?", "%"+name+"%").Find(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}
@@ -70,7 +70,7 @@ func (re *category_repo) FindByName(name string) (*models.Categories, error) {
 
 func (re *category_repo) FindById(id int) (*models.Categories, error) {
 	var datas *models.Categories
-	res := re.db.Order("id asc").Where("id = ?", id).Find(&datas)
+	res := re.db.Order("category_id asc").Where("category_id = ?", id).Find(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}

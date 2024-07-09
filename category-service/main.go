@@ -9,7 +9,11 @@ import (
 )
 
 func main() {
-	if err := config.Run(os.Args[1:]); err != nil {
+	args := os.Args[1:]
+	if len(args) <= 0 {
+		args = []string{"serve"}
+	}
+	if err := config.Run(args); err != nil {
 		log.Fatal(err)
 	}
 }
