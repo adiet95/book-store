@@ -16,7 +16,11 @@ func New() (*gin.Engine, error) {
 		return nil, errors.New("failed init database")
 	}
 
-	category.New(mainRoute, db)
+	dbRedis, err := database.NewRedisClient()
+	if err != nil {
+		return nil, errors.New("failed init database")
+	}
+	category.New(mainRoute, db, dbRedis)
 
 	return mainRoute, nil
 }

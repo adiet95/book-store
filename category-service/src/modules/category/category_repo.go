@@ -1,18 +1,26 @@
 package category
 
 import (
+	"context"
 	"errors"
+	"github.com/adiet95/book-store/category-service/src/libs"
+	"github.com/go-redis/redis/v8"
+	"time"
 
 	"github.com/adiet95/book-store/category-service/src/database/models"
 	"gorm.io/gorm"
 )
 
 type category_repo struct {
-	db *gorm.DB
+	db          *gorm.DB
+	redisClient *redis.Client
 }
 
-func NewRepo(db *gorm.DB) *category_repo {
-	return &category_repo{db}
+func NewRepo(db *gorm.DB, redisClient *redis.Client) *category_repo {
+	return &category_repo{
+		db:          db,
+		redisClient: redisClient,
+	}
 }
 
 func (r *category_repo) FindAll(limit, offset int) (*models.Categories, error) {
@@ -90,4 +98,34 @@ func (re *category_repo) FindById(id int) (*models.Category, error) {
 		return nil, errors.New("data not found")
 	}
 	return datas, nil
+}
+
+func (re *category_repo) GetRedisKey(ctx context.Context, redisKey string) (*models.Category, error) {
+	var cacheKey = redisKey
+	var result models.Category
+	payloadBytes, errGetData := re.redisClient.Get(ctx, cacheKey).Bytes()
+	if errGetData != nil {
+		return nil, errors.New("failed to found data redis")
+	}
+
+	if errFromJSON := libs.FromJSON(payloadBytes, &result); errFromJSON != nil {
+		return nil, errors.New("failed json redis")
+	}
+	return &result, nil
+}
+
+func (re *category_repo) StoreRedisKey(ctx context.Context, redisKey string, data models.Category) (*models.Category, error) {
+	var cacheKey = redisKey
+	var expiredAt = 1 * time.Hour
+	var payload, errConvert = libs.Stringify(data)
+	if errConvert != nil {
+		return nil, errors.New("failed convert json redis")
+	}
+
+	err := re.redisClient.Set(ctx, cacheKey, payload, expiredAt).Err()
+	if err != nil {
+		return nil, errors.New("err store redis")
+
+	}
+	return &data, nil
 }

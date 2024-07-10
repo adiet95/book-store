@@ -96,6 +96,17 @@
         - '5432:5432'
       volumes:
         - ./pg_data:/var/lib/postgresql/data
-
+    redis:
+      image: redis:latest
+      restart: always
+      ports:
+        - "6379:6379"
+      volumes:
+        - /path/to/local/dаta:/root/redis
+        - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
+      environment:
+        - REDIS_PASSWORD=
+        - REDIS_PORT=6379
+        - REDIS_DATABASES=4
   volumes:
     pgdata: {}

@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"context"
 	"github.com/adiet95/book-store/category-service/src/database/models"
 	"github.com/adiet95/book-store/category-service/src/libs"
 )
@@ -12,6 +13,8 @@ type CategoryRepo interface {
 	Delete(id int) (*models.Category, error)
 	FindByName(name string) (*models.Categories, error)
 	FindById(id int) (*models.Category, error)
+	GetRedisKey(ctx context.Context, redisKey string) (*models.Category, error)
+	StoreRedisKey(ctx context.Context, redisKey string, data models.Category) (*models.Category, error)
 }
 
 type CategoryService interface {
@@ -20,5 +23,5 @@ type CategoryService interface {
 	Update(data *models.Category, id int) *libs.Response
 	Delete(id int) *libs.Response
 	Search(name string) *libs.Response
-	SearchId(id int) *libs.Response
+	SearchId(id int, ctx context.Context) *libs.Response
 }

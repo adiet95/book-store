@@ -71,5 +71,5 @@ func (re *category_ctrl) Search(c *gin.Context) {
 func (re *category_ctrl) SearchId(c *gin.Context) {
 	val := c.Param("id")
 	v, _ := strconv.Atoi(val)
-	re.svc.SearchId(v).Send(c)
+	re.svc.SearchId(v, c).Send(c)
 }
