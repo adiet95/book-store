@@ -11,8 +11,7 @@ type StockRepo interface {
 	Update(data *models.Stock, id int) (*models.Stock, error)
 	Delete(id int) (*models.Stock, error)
 	FindByName(name string) (*models.Stocks, error)
-	GetUserId(email string) (*models.User, error)
-	FindById(id int) (*models.Stocks, error)
+	FindById(id int) (*models.Stock, error)
 }
 
 type StockService interface {

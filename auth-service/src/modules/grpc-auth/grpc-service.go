@@ -33,6 +33,7 @@ func (s *AuthGrpc) ValidateToken(c context.Context, authReq *pb.AuthRequest) (*p
 	}
 	result.IsValidate = true
 	result.Role = checkToken.Role
+	result.Email = checkToken.Email
 	err = nil
 	return result, nil
 }

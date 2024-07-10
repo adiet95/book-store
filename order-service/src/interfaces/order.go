@@ -13,6 +13,7 @@ type OrderRepo interface {
 	FindByName(name string) (*models.Orders, error)
 	GetUserId(email string) (*models.User, error)
 	FindById(id int) (*models.Orders, error)
+	FindByUserId(id, limit, offset int) (*models.Orders, error)
 }
 
 type OrderService interface {
@@ -22,5 +23,6 @@ type OrderService interface {
 	Delete(id int) *libs.Response
 	Search(name string) *libs.Response
 	SearchId(id int) *libs.Response
-	Order(data *models.Order) *libs.Response
+	SearchByUserId(limit, offset int, email string) *libs.Response
+	Order(data *models.Order, email string) *libs.Response
 }

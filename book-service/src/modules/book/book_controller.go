@@ -43,7 +43,7 @@ func (re *book_ctrl) Add(c *gin.Context) {
 }
 
 func (re *book_ctrl) Update(c *gin.Context) {
-	val := c.Request.URL.Query().Get("id")
+	val := c.Param("id")
 	id, _ := strconv.Atoi(val)
 
 	var datas models.Book
@@ -56,7 +56,7 @@ func (re *book_ctrl) Update(c *gin.Context) {
 }
 
 func (re *book_ctrl) Delete(c *gin.Context) {
-	val := c.Request.URL.Query().Get("id")
+	val := c.Param("id")
 	v, _ := strconv.Atoi(val)
 
 	re.svc.Delete(v).Send(c)
@@ -69,28 +69,7 @@ func (re *book_ctrl) Search(c *gin.Context) {
 }
 
 func (re *book_ctrl) SearchId(c *gin.Context) {
-	val := c.Request.URL.Query().Get("id")
+	val := c.Param("id")
 	v, _ := strconv.Atoi(val)
 	re.svc.SearchId(v).Send(c)
-}
-
-func (re *book_ctrl) Order(c *gin.Context) {
-	val := c.Request.URL.Query().Get("id")
-	id, _ := strconv.Atoi(val)
-
-	var datas models.Book
-	if datas.StatusOrder != "" {
-		if datas.StatusOrder == strings.ToLower("borrow") {
-			datas.Qty = datas.Qty - datas.QtyOrder
-		} else if datas.StatusOrder == strings.ToLower("return") {
-			datas.Qty = datas.Qty + datas.QtyOrder
-		}
-	}
-
-	err := json.NewDecoder(c.Request.Body).Decode(&datas)
-	if err != nil {
-		libs.New(err.Error(), 400, true)
-		c.Abort()
-	}
-	re.svc.Update(&datas, id).Send(c)
 }

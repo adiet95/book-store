@@ -1,0 +1,52 @@
+definitions:
+  libs.Response:
+    properties:
+      data: {}
+      description: {}
+      isError:
+        type: boolean
+      status:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /auth:
+    post:
+      description: 'to sign in(Validation: Need Testing)'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/libs.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/libs.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/libs.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: sign in
+      tags:
+      - data
+  /example/helloworld:
+    get:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: ping example
+      tags:
+      - example
+swagger: "2.0"

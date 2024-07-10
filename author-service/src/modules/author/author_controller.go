@@ -43,7 +43,7 @@ func (re *author_ctrl) Add(c *gin.Context) {
 }
 
 func (re *author_ctrl) Update(c *gin.Context) {
-	val := c.Request.URL.Query().Get("id")
+	val := c.Param("id")
 	id, _ := strconv.Atoi(val)
 
 	var datas models.Author
@@ -56,20 +56,20 @@ func (re *author_ctrl) Update(c *gin.Context) {
 }
 
 func (re *author_ctrl) Delete(c *gin.Context) {
-	val := c.Request.URL.Query().Get("id")
+	val := c.Param("id")
 	v, _ := strconv.Atoi(val)
 
 	re.svc.Delete(v).Send(c)
 }
 
 func (re *author_ctrl) Search(c *gin.Context) {
-	val := c.Request.URL.Query().Get("name")
+	val := c.Request.URL.Query().Get("full_name")
 	v := strings.ToLower(val)
 	re.svc.Search(v).Send(c)
 }
 
 func (re *author_ctrl) SearchId(c *gin.Context) {
-	val := c.Request.URL.Query().Get("id")
+	val := c.Param("id")
 	v, _ := strconv.Atoi(val)
 	re.svc.SearchId(v).Send(c)
 }

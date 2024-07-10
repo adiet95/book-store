@@ -25,6 +25,31 @@ func (r *book_repo) FindAll(limit, offset int) (*models.Books, error) {
 }
 
 func (r *book_repo) Save(data *models.Book) (*models.Book, error) {
+	var datas models.Books
+	var dataAuthor models.Author
+	var dataCategory models.Category
+
+	checkName := r.db.Where("LOWER(book_name) LIKE ?", "%"+data.BookName+"%").Find(&datas)
+	if checkName.RowsAffected != 0 {
+		return nil, errors.New("book name is exist")
+	}
+
+	checkAuthor := r.db.Where("author_id = ?", data.AuthorId).First(&dataAuthor)
+	if checkAuthor.Error != nil {
+		return nil, errors.New("failed to found data author")
+	}
+	if checkAuthor.RowsAffected == 0 {
+		return nil, errors.New("author not found")
+	}
+
+	checkCategory := r.db.Where("category_id = ?", data.CategoryId).First(&dataCategory)
+	if checkCategory.Error != nil {
+		return nil, errors.New("failed to found data category")
+	}
+	if checkCategory.RowsAffected == 0 {
+		return nil, errors.New("category not found")
+	}
+
 	res := r.db.Create(data)
 	if res.Error != nil {
 		return nil, errors.New("failed obtain datas")
@@ -33,6 +58,31 @@ func (r *book_repo) Save(data *models.Book) (*models.Book, error) {
 }
 
 func (re *book_repo) Update(data *models.Book, id int) (*models.Book, error) {
+	var datas models.Books
+	var dataAuthor models.Author
+	var dataCategory models.Category
+
+	checkName := re.db.Where("LOWER(book_name) LIKE ?", "%"+data.BookName+"%").Find(&datas)
+	if checkName.RowsAffected != 0 {
+		return nil, errors.New("book name is exist")
+	}
+
+	checkAuthor := re.db.Where("author_id = ?", data.AuthorId).First(&dataAuthor)
+	if checkAuthor.Error != nil {
+		return nil, errors.New("failed to found data author")
+	}
+	if checkAuthor.RowsAffected == 0 {
+		return nil, errors.New("author not found")
+	}
+
+	checkCategory := re.db.Where("category_id = ?", data.CategoryId).First(&dataCategory)
+	if checkCategory.Error != nil {
+		return nil, errors.New("failed to found data category")
+	}
+	if checkCategory.RowsAffected == 0 {
+		return nil, errors.New("category not found")
+	}
+
 	res := re.db.Model(&data).Where("book_id = ?", id).Updates(&data)
 
 	if res.Error != nil {
@@ -58,7 +108,7 @@ func (re *book_repo) Delete(id int) (*models.Book, error) {
 
 func (re *book_repo) FindByName(name string) (*models.Books, error) {
 	var datas *models.Books
-	res := re.db.Order("book_id asc").Where("LOWER(order_name) LIKE ?", "%"+name+"%").Find(&datas)
+	res := re.db.Order("book_id asc").Where("LOWER(book_name) LIKE ?", "%"+name+"%").Find(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}
@@ -68,9 +118,9 @@ func (re *book_repo) FindByName(name string) (*models.Books, error) {
 	return datas, nil
 }
 
-func (re *book_repo) FindById(id int) (*models.Books, error) {
-	var datas *models.Books
-	res := re.db.Order("book_id asc").Where("book_id = ?", id).Find(&datas)
+func (re *book_repo) FindById(id int) (*models.Book, error) {
+	var datas *models.Book
+	res := re.db.Order("book_id asc").Where("book_id = ?", id).First(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}
@@ -78,15 +128,4 @@ func (re *book_repo) FindById(id int) (*models.Books, error) {
 		return nil, errors.New("data not found")
 	}
 	return datas, nil
-}
-
-func (r *book_repo) GetUserId(email string) (*models.User, error) {
-	var users *models.Users
-	var user *models.User
-
-	result := r.db.Model(&users).Where("email = ?", email).Find(&user)
-	if result.Error != nil {
-		return nil, errors.New("invalid user_id")
-	}
-	return user, nil
 }

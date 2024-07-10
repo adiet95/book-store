@@ -25,6 +25,12 @@ func (r *category_repo) FindAll(limit, offset int) (*models.Categories, error) {
 }
 
 func (r *category_repo) Save(data *models.Category) (*models.Category, error) {
+	var datas models.Categories
+	checkName := r.db.Order("category_id asc").Where("LOWER(category_name) LIKE ?", "%"+data.CategoryName+"%").Find(&datas)
+	if checkName.RowsAffected != 0 {
+		return nil, errors.New("category name is exist")
+	}
+
 	res := r.db.Create(data)
 	if res.Error != nil {
 		return nil, errors.New("failed obtain datas")
@@ -33,6 +39,12 @@ func (r *category_repo) Save(data *models.Category) (*models.Category, error) {
 }
 
 func (re *category_repo) Update(data *models.Category, id int) (*models.Category, error) {
+	var datas models.Categories
+	checkName := re.db.Order("category_id asc").Where("LOWER(category_name) LIKE ?", "%"+data.CategoryName+"%").Find(&datas)
+	if checkName.RowsAffected != 0 {
+		return nil, errors.New("category name is exist")
+	}
+
 	res := re.db.Model(&data).Where("category_id = ?", id).Updates(&data)
 
 	if res.Error != nil {
@@ -68,9 +80,9 @@ func (re *category_repo) FindByName(name string) (*models.Categories, error) {
 	return datas, nil
 }
 
-func (re *category_repo) FindById(id int) (*models.Categories, error) {
-	var datas *models.Categories
-	res := re.db.Order("category_id asc").Where("category_id = ?", id).Find(&datas)
+func (re *category_repo) FindById(id int) (*models.Category, error) {
+	var datas *models.Category
+	res := re.db.Order("category_id asc").Where("category_id = ?", id).First(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}

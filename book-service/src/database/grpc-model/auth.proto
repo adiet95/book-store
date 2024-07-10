@@ -11,12 +11,14 @@ message AuthData {
   string token = 1;
   string role = 2;
   bool isValidate = 3;
+  string email = 4;
 }
 
 message AuthResponse {
   string token = 1;
   string role = 2;
   bool isValidate = 3;
+  string email = 4;
 }
 
 service Authentication {

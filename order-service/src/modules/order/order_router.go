@@ -15,12 +15,11 @@ func New(rt *gin.Engine, db *gorm.DB) {
 
 	route := rt.Group("/order").Use(middleware.CheckAuth())
 	{
-		//route.POST("", middleware.CheckAuthor(), ctrl.Add)
 		route.PUT("/:id", middleware.CheckAuthor(), ctrl.Update)
 		route.DELETE("/:id", middleware.CheckAuthor(), ctrl.Delete)
 		route.GET("", ctrl.GetAll)
 		route.GET("/search", ctrl.Search)
 		route.GET("/:id", ctrl.SearchId)
-		route.POST("/", ctrl.Order)
+		route.POST("", ctrl.Order)
 	}
 }

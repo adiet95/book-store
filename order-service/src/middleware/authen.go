@@ -46,7 +46,8 @@ func CheckAuth() gin.HandlerFunc {
 			c.Abort()
 		}
 
-		c.Set("validate", tokenData.IsValidate)
+		c.Set("email", tokenData.Email)
+		c.Set("role", tokenData.Role)
 		c.Next()
 	}
 }

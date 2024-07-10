@@ -17,6 +17,17 @@ func NewCtrl(reps interfaces.AuthService) *user_ctrl {
 	return &user_ctrl{reps}
 }
 
+// SignIn
+// @Tags data
+// @Summary sign in
+// @Description to sign in(Validation: Need Testing)
+// @Produce json
+// @Body
+// @Success 200 {object} libs.Response{}
+// @Failure 400 {object} libs.Response{}
+// @Failure 500 {object} libs.Response{}
+// @Security ApiKeyAuth
+// @Router /auth [post]
 func (u *user_ctrl) SignIn(c *gin.Context) {
 	var data models.User
 

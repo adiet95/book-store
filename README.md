@@ -19,11 +19,14 @@ Notes :
 <h2 align="center">
  ERD (Entity Relation Database)
 </h2>
-<p align="center"><img src="https://res.cloudinary.com/dw5qffbop/image/upload/v1720514738/Screenshot_2024-07-09_153934_m0bzlk.png" alt="erd.jpg" /></p>
+<p align="center"><img src="https://res.cloudinary.com/dw5qffbop/image/upload/v1720573559/Screenshot_2024-07-10_075626_daxoz1.png" alt="erd.jpg" /></p>
 
 <h2 align="center">
- Table Specification
+ Service Architect
 </h2>
+<p align="center"><img src="https://res.cloudinary.com/dw5qffbop/image/upload/v1720574544/book-store.drawio_qwuyru.png" /></p>
+
+
 
 ## Several command you must know in this app :
 ```bash
@@ -44,7 +47,7 @@ go run . migrate -d //for rollback
 1. Clone the repository
 
 ```bash
-https://github.com/adiet95/book-store.git
+git clone https://github.com/adiet95/book-store.git
 ```
 
 2. Install dependencies
@@ -101,153 +104,14 @@ go run . serve
 ### If you want to build with docker-compose
 
 ```bash
-docker compose build 
+docker compose up --build 
 ```
 
 ### 🚀 You are all set
 
-## 🔗 RESTful endpoints
-### POST /register
-
-> Create new user
-_Request Header_
-```
-not needed
-```
-_Request Body_
-```
-{
-  "user_name": <your username> (STRING),
-  "full_name": <your username> (STRING),
-  "email": <your email> (STRING),
-  "password": <your password> (STRING),
-  "address": <your address> (STRING),
-  "phone": <your phone> (STRING)
-}
-```
-
-### POST /login
-
-> Process Login
-_Request Header_
-```
-not needed
-```
-_Request Body_
-```
-{
-  "email": <your email> (STRING),
-  "password": <your password> (STRING)
-}
-```
-
-### GET /user
-> Get Data Costumer
-_Request Header_
-```
-Bearer Token
-```
-_Request Body_
-```
-not needed
-```
-_Request Query Params_
-```
-limit = (limit for pagination)
-offset = (offset for pagination)
-```
-
-### POST /user
-> Post Data Costumer
-_Request Header_
-```
-Bearer Token
-```
-_Request Body_
-```
-{
-    "email" : "(STRING)",
-    "password" : "(STRING)",
-    "address" : "(STRING)",
-    "full_name" : "(STRING)",
-    "phone" : "(STRING)"
-}
-```
-_Request Query Params_
-```
-no need
-```
-
-### PUT /user
-> Update Data Costumer
-_Request Header_
-```
-Bearer Token
-```
-_Request Body_
-```
-{
-    "email" : "(STRING)",
-    "password" : "(STRING)",
-    "address" : "(STRING)",
-    "full_name" : "(STRING)",
-    "phone" : "(STRING)"
-}
-```
-_Request Query Params_
-```
-no need
-```
-
-### DELETE /user
-> Delete Data Costumer
-_Request Header_
-```
-Bearer Token
-```
-_Request Body_
-```
-no need
-```
-_Request Query Params_
-```
-email = (Delete by email)
-```
-
-### GET /user/detail
-
-> Get Detail Data Costumer Email
-
-_Request Header_
-```
-Bearer Token
-```
-
-_Request Body_
-```
-no need
-```
-_Request Query Params_
-```
-email = (Get detail data by email)
-```
-
-### GET /user/search
-
-> Search Data Costumer by Full_Name
-
-_Request Header_
-```
-Bearer Token
-```
-
-_Request Body_
-```
-no need
-```
-_Request Query Params_
-```
-name = (Search data by full_name)
+## 🛠️ API Documentation
+```bash
+https://documenter.getpostman.com/view/28477373/2sA3e2hA7c
 ```
 
 ## 💻 Built with
@@ -255,6 +119,9 @@ name = (Search data by full_name)
 - [Golang](https://go.dev/): Go Programming Language
 - [Gin-Gonic](https://gin-gonic.com/): for handle http request
 - [Postgres](https://www.postgresql.org/): for DBMS
+- [Redis](https://redis.io/solutions/caching/): for Database Caching
+- [gRPC](https://grpc.io/docs/languages/go/quickstart/): for communicate between services
+
 
 
 ## 🚀 About Me

@@ -11,7 +11,7 @@ type AuthorRepo interface {
 	Update(data *models.Author, id int) (*models.Author, error)
 	Delete(id int) (*models.Author, error)
 	FindByName(name string) (*models.Authors, error)
-	FindById(id int) (*models.Authors, error)
+	FindById(id int) (*models.Author, error)
 }
 
 type AuthorService interface {

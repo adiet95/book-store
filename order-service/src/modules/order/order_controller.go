@@ -25,10 +25,22 @@ func (re *order_ctrl) GetAll(c *gin.Context) {
 	if limit == 0 {
 		limit = 10
 	}
-
 	val := c.Request.URL.Query().Get("offset")
 	offset, _ := strconv.Atoi(val)
 
+	claimUserRole, exist := c.Get("role")
+	if !exist {
+		libs.New("claim user is not exist", 400, true)
+		c.Abort()
+	}
+	if claimUserRole.(string) != "admin" {
+		claimUserEmail, existEmail := c.Get("email")
+		if !existEmail {
+			libs.New("claim user is not exist", 400, true)
+			c.Abort()
+		}
+		re.svc.SearchByUserId(limit, offset, claimUserEmail.(string)).Send(c)
+	}
 	re.svc.GetAll(limit, offset).Send(c)
 }
 
@@ -81,5 +93,12 @@ func (re *order_ctrl) Order(c *gin.Context) {
 		libs.New(err.Error(), 400, true)
 		c.Abort()
 	}
-	re.svc.Order(&data).Send(c)
+
+	claimUserEmail, existEmail := c.Get("email")
+	if !existEmail {
+		libs.New("claim user is not exist", 400, true)
+		c.Abort()
+	}
+
+	re.svc.Order(&data, claimUserEmail.(string)).Send(c)
 }

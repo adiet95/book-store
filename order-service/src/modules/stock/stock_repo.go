@@ -25,9 +25,15 @@ func (r *stock_repo) FindAll(limit, offset int) (*models.Stocks, error) {
 }
 
 func (r *stock_repo) Save(data *models.Stock) (*models.Stock, error) {
-	checkBook := r.db.Model(&data).Where("book_id = ?", data.BookId).Find(&data)
+	checkName := r.db.Where("LOWER(stock_name) LIKE ?", "%"+data.StockName+"%").Find(&data)
+	if checkName.RowsAffected != 0 {
+		return nil, errors.New("stock name is exist")
+	}
+
+	var dataBook *models.Book
+	checkBook := r.db.Model(&dataBook).Where("book_id = ?", data.BookId).First(&dataBook)
 	if checkBook.RowsAffected == 0 {
-		return nil, errors.New("order not found")
+		return nil, errors.New("book not found")
 	}
 
 	res := r.db.Create(data)
@@ -38,9 +44,10 @@ func (r *stock_repo) Save(data *models.Stock) (*models.Stock, error) {
 }
 
 func (re *stock_repo) Update(data *models.Stock, id int) (*models.Stock, error) {
-	checkBook := re.db.Model(&data).Where("book_id = ?", data.BookId).Find(&data)
+	var dataBook *models.Book
+	checkBook := re.db.Model(&dataBook).Where("book_id = ?", data.BookId).First(&dataBook)
 	if checkBook.RowsAffected == 0 {
-		return nil, errors.New("order not found")
+		return nil, errors.New("book not found")
 	}
 
 	res := re.db.Model(&data).Where("stock_id = ?", id).Updates(&data)
@@ -68,7 +75,7 @@ func (re *stock_repo) Delete(id int) (*models.Stock, error) {
 
 func (re *stock_repo) FindByName(name string) (*models.Stocks, error) {
 	var datas *models.Stocks
-	res := re.db.Order("stock_id asc").Where("LOWER(stock_name) LIKE ?", "%"+name+"%").Find(&datas)
+	res := re.db.Where("LOWER(stock_name) LIKE ?", "%"+name+"%").Find(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}
@@ -78,9 +85,9 @@ func (re *stock_repo) FindByName(name string) (*models.Stocks, error) {
 	return datas, nil
 }
 
-func (re *stock_repo) FindById(id int) (*models.Stocks, error) {
-	var datas *models.Stocks
-	res := re.db.Order("stock_id asc").Where("stock_id = ?", id).Find(&datas)
+func (re *stock_repo) FindById(id int) (*models.Stock, error) {
+	var datas *models.Stock
+	res := re.db.Where("stock_id = ?", id).First(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}
@@ -88,15 +95,4 @@ func (re *stock_repo) FindById(id int) (*models.Stocks, error) {
 		return nil, errors.New("data not found")
 	}
 	return datas, nil
-}
-
-func (r *stock_repo) GetUserId(email string) (*models.User, error) {
-	var users *models.Users
-	var user *models.User
-
-	result := r.db.Model(&users).Where("email = ?", email).Find(&user)
-	if result.Error != nil {
-		return nil, errors.New("invalid user_id")
-	}
-	return user, nil
 }

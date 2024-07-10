@@ -11,7 +11,7 @@ type CategoryRepo interface {
 	Update(data *models.Category, id int) (*models.Category, error)
 	Delete(id int) (*models.Category, error)
 	FindByName(name string) (*models.Categories, error)
-	FindById(id int) (*models.Categories, error)
+	FindById(id int) (*models.Category, error)
 }
 
 type CategoryService interface {

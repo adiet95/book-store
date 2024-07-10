@@ -43,7 +43,7 @@ func (re *category_ctrl) Add(c *gin.Context) {
 }
 
 func (re *category_ctrl) Update(c *gin.Context) {
-	val := c.Request.URL.Query().Get("id")
+	val := c.Param("id")
 	id, _ := strconv.Atoi(val)
 
 	var datas models.Category
@@ -56,7 +56,7 @@ func (re *category_ctrl) Update(c *gin.Context) {
 }
 
 func (re *category_ctrl) Delete(c *gin.Context) {
-	val := c.Request.URL.Query().Get("id")
+	val := c.Param("id")
 	v, _ := strconv.Atoi(val)
 
 	re.svc.Delete(v).Send(c)
@@ -69,7 +69,7 @@ func (re *category_ctrl) Search(c *gin.Context) {
 }
 
 func (re *category_ctrl) SearchId(c *gin.Context) {
-	val := c.Request.URL.Query().Get("id")
+	val := c.Param("id")
 	v, _ := strconv.Atoi(val)
 	re.svc.SearchId(v).Send(c)
 }

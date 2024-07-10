@@ -25,6 +25,12 @@ func (r *author_repo) FindAll(limit, offset int) (*models.Authors, error) {
 }
 
 func (r *author_repo) Save(data *models.Author) (*models.Author, error) {
+	var datas models.Authors
+	checkName := r.db.Where("LOWER(full_name) LIKE ?", "%"+data.FullName+"%").Find(&datas)
+	if checkName.RowsAffected != 0 {
+		return nil, errors.New("fullname is exist")
+	}
+
 	res := r.db.Create(data)
 	if res.Error != nil {
 		return nil, errors.New("failed obtain datas")
@@ -33,8 +39,12 @@ func (r *author_repo) Save(data *models.Author) (*models.Author, error) {
 }
 
 func (re *author_repo) Update(data *models.Author, id int) (*models.Author, error) {
+	var datas models.Authors
+	checkName := re.db.Order("author_id asc").Where("LOWER(full_name) LIKE ?", "%"+data.FullName+"%").Find(&datas)
+	if checkName.RowsAffected != 0 {
+		return nil, errors.New("fullname is exist")
+	}
 	res := re.db.Model(&data).Where("author_id = ?", id).Updates(&data)
-
 	if res.Error != nil {
 		return nil, errors.New("failed to update data")
 	}
@@ -58,7 +68,7 @@ func (re *author_repo) Delete(id int) (*models.Author, error) {
 
 func (re *author_repo) FindByName(name string) (*models.Authors, error) {
 	var datas *models.Authors
-	res := re.db.Order("author_id asc").Where("LOWER(order_name) LIKE ?", "%"+name+"%").Find(&datas)
+	res := re.db.Order("author_id asc").Where("LOWER(full_name) LIKE ?", "%"+name+"%").Find(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}
@@ -68,14 +78,14 @@ func (re *author_repo) FindByName(name string) (*models.Authors, error) {
 	return datas, nil
 }
 
-func (re *author_repo) FindById(id int) (*models.Authors, error) {
-	var datas *models.Authors
-	res := re.db.Order("author_id asc").Where("author_id = ?", id).Find(&datas)
+func (re *author_repo) FindById(id int) (*models.Author, error) {
+	var data *models.Author
+	res := re.db.Order("author_id asc").Where("author_id = ?", id).First(&data)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}
 	if res.RowsAffected == 0 {
 		return nil, errors.New("data not found")
 	}
-	return datas, nil
+	return data, nil
 }

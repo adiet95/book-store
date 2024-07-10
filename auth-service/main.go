@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/spf13/cobra"
 	"log"
 	"os"
 
@@ -9,12 +8,9 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-var initCommand = cobra.Command{
-	Short: "Simple backend login & register",
-}
-
 func main() {
 	args := os.Args[1:]
+	log.Println(args)
 	if len(args) <= 0 {
 		args = []string{"serve"}
 	}

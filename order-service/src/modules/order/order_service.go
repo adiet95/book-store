@@ -67,29 +67,57 @@ func (re *order_service) SearchId(id int) *libs.Response {
 	return libs.New(data, 200, false)
 }
 
-func (re *order_service) Order(data *models.Order) *libs.Response {
+func (re *order_service) SearchByUserId(limit, offset int, email string) *libs.Response {
+	dataUser, err := re.order_repo.GetUserId(email)
+	if err != nil {
+		return libs.New(err.Error(), 400, true)
+	}
+
+	data, err := re.order_repo.FindByUserId(int(dataUser.UserId), limit, offset)
+	if err != nil {
+		return libs.New(err.Error(), 400, true)
+	}
+	return libs.New(data, 200, false)
+}
+
+func (re *order_service) Order(data *models.Order, email string) *libs.Response {
+	dataUser, err := re.order_repo.GetUserId(email)
+	if err != nil {
+		return libs.New(err.Error(), 400, true)
+	}
+
+	data.UserId = int(dataUser.UserId)
+
+	dataStock, err := re.stock_repo.FindById(data.StockId)
+	if err != nil {
+		return libs.New(err.Error(), 400, true)
+	}
 	if data.Status != "" {
 		if data.Status == strings.ToLower("borrow") {
-			var dataStock models.Stock
 			dataStock.Qty = dataStock.Qty - data.Qty
 			if data.Qty == 0 {
 				dataStock.Status = "stock out"
 			} else if dataStock.Qty > 0 {
 				dataStock.Status = "available"
+			} else if dataStock.Qty < 0 {
+				return libs.New("out of stock", 400, true)
 			}
-			_, err := re.stock_repo.Update(&dataStock, data.StockId)
+
+			_, err = re.stock_repo.Update(dataStock, data.StockId)
 			if err != nil {
 				return libs.New(err.Error(), 400, true)
 			}
 		} else if data.Status == strings.ToLower("return") {
-			var dataStock models.Stock
 			dataStock.Qty = dataStock.Qty + data.Qty
 			if data.Qty == 0 {
 				dataStock.Status = "stock out"
 			} else if dataStock.Qty > 0 {
 				dataStock.Status = "available"
+			} else if dataStock.Qty < 0 {
+				return libs.New("out of stock", 400, true)
 			}
-			_, err := re.stock_repo.Update(&dataStock, data.StockId)
+
+			_, err = re.stock_repo.Update(dataStock, data.StockId)
 			if err != nil {
 				return libs.New(err.Error(), 400, true)
 			}

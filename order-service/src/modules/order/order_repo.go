@@ -25,7 +25,8 @@ func (r *order_repo) FindAll(limit, offset int) (*models.Orders, error) {
 }
 
 func (r *order_repo) Save(data *models.Order) (*models.Order, error) {
-	checkStock := r.db.Model(&data).Where("stock_id = ?", data.StockId).Find(&data)
+	var dataStock *models.Stock
+	checkStock := r.db.Model(&dataStock).Where("stock_id = ?", data.StockId).Find(&dataStock)
 	if checkStock.RowsAffected == 0 {
 		return nil, errors.New("stock not found")
 	}
@@ -38,11 +39,11 @@ func (r *order_repo) Save(data *models.Order) (*models.Order, error) {
 }
 
 func (re *order_repo) Update(data *models.Order, id int) (*models.Order, error) {
-	checkStock := re.db.Model(&data).Where("stock_id = ?", data.StockId).Find(&data)
+	var dataStock *models.Stock
+	checkStock := re.db.Model(&dataStock).Where("stock_id = ?", data.StockId).Find(&dataStock)
 	if checkStock.RowsAffected == 0 {
 		return nil, errors.New("stock not found")
 	}
-
 	res := re.db.Model(&data).Where("order_id = ?", id).Updates(&data)
 
 	if res.Error != nil {
@@ -81,6 +82,18 @@ func (re *order_repo) FindByName(name string) (*models.Orders, error) {
 func (re *order_repo) FindById(id int) (*models.Orders, error) {
 	var datas *models.Orders
 	res := re.db.Order("order_id asc").Where("order_id = ?", id).Find(&datas)
+	if res.Error != nil {
+		return nil, errors.New("failed to found data")
+	}
+	if res.RowsAffected == 0 {
+		return nil, errors.New("data not found")
+	}
+	return datas, nil
+}
+
+func (re *order_repo) FindByUserId(id, limit, offset int) (*models.Orders, error) {
+	var datas *models.Orders
+	res := re.db.Order("order_id asc").Limit(limit).Offset(offset).Where("user_id = ?", id).Find(&datas)
 	if res.Error != nil {
 		return nil, errors.New("failed to found data")
 	}
