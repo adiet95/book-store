@@ -15,7 +15,12 @@ func New() (*gin.Engine, error) {
 	if err != nil {
 		return nil, errors.New("failed init database")
 	}
-	author.New(mainRoute, db)
+	dbRedis, err := database.NewRedisClient()
+	if err != nil {
+		return nil, errors.New("failed init redis")
+	}
+
+	author.New(mainRoute, db, dbRedis)
 
 	return mainRoute, nil
 }

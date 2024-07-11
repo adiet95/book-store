@@ -15,13 +15,14 @@ type CategoryRepo interface {
 	FindById(id int) (*models.Category, error)
 	GetRedisKey(ctx context.Context, redisKey string) (*models.Category, error)
 	StoreRedisKey(ctx context.Context, redisKey string, data models.Category) (*models.Category, error)
+	DeleteRedisKey(ctx context.Context, redisKey string) error
 }
 
 type CategoryService interface {
 	GetAll(limit, offset int) *libs.Response
 	Add(data *models.Category) *libs.Response
-	Update(data *models.Category, id int) *libs.Response
-	Delete(id int) *libs.Response
+	Update(ctx context.Context, data *models.Category, id int) *libs.Response
+	Delete(ctx context.Context, id int) *libs.Response
 	Search(name string) *libs.Response
 	SearchId(id int, ctx context.Context) *libs.Response
 }

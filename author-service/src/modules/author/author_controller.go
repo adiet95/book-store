@@ -52,14 +52,14 @@ func (re *author_ctrl) Update(c *gin.Context) {
 		libs.New(err.Error(), 400, true)
 		c.Abort()
 	}
-	re.svc.Update(&datas, id).Send(c)
+	re.svc.Update(c, &datas, id).Send(c)
 }
 
 func (re *author_ctrl) Delete(c *gin.Context) {
 	val := c.Param("id")
 	v, _ := strconv.Atoi(val)
 
-	re.svc.Delete(v).Send(c)
+	re.svc.Delete(c, v).Send(c)
 }
 
 func (re *author_ctrl) Search(c *gin.Context) {
@@ -71,5 +71,5 @@ func (re *author_ctrl) Search(c *gin.Context) {
 func (re *author_ctrl) SearchId(c *gin.Context) {
 	val := c.Param("id")
 	v, _ := strconv.Atoi(val)
-	re.svc.SearchId(v).Send(c)
+	re.svc.SearchId(c, v).Send(c)
 }

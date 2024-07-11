@@ -5,6 +5,7 @@ import (
 	"fmt"
 	pb "github.com/adiet95/book-store/category-service/src/database/grpc-model"
 	"google.golang.org/grpc"
+	"log"
 	"os"
 	"strings"
 
@@ -37,6 +38,7 @@ func CheckAuthor() gin.HandlerFunc {
 				libs.New(err.Error(), 401, true).Send(c)
 				c.Abort()
 			}
+			log.Println(tokenData, "<<<TOKEN")
 			if tokenData.Role != "admin" {
 				libs.New("forbidden access", 401, true).Send(c)
 				c.Abort()

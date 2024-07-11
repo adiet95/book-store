@@ -3,6 +3,7 @@ package category
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/adiet95/book-store/category-service/src/libs"
 	"github.com/go-redis/redis/v8"
 	"time"
@@ -47,12 +48,6 @@ func (r *category_repo) Save(data *models.Category) (*models.Category, error) {
 }
 
 func (re *category_repo) Update(data *models.Category, id int) (*models.Category, error) {
-	var datas models.Categories
-	checkName := re.db.Order("category_id asc").Where("LOWER(category_name) LIKE ?", "%"+data.CategoryName+"%").Find(&datas)
-	if checkName.RowsAffected != 0 {
-		return nil, errors.New("category name is exist")
-	}
-
 	res := re.db.Model(&data).Where("category_id = ?", id).Updates(&data)
 
 	if res.Error != nil {
@@ -101,11 +96,11 @@ func (re *category_repo) FindById(id int) (*models.Category, error) {
 }
 
 func (re *category_repo) GetRedisKey(ctx context.Context, redisKey string) (*models.Category, error) {
-	var cacheKey = redisKey
+	var cacheKey = fmt.Sprintf("%v:%v", "category-service", redisKey)
 	var result models.Category
 	payloadBytes, errGetData := re.redisClient.Get(ctx, cacheKey).Bytes()
 	if errGetData != nil {
-		return nil, errors.New("failed to found data redis")
+		return nil, redis.Nil
 	}
 
 	if errFromJSON := libs.FromJSON(payloadBytes, &result); errFromJSON != nil {
@@ -128,4 +123,12 @@ func (re *category_repo) StoreRedisKey(ctx context.Context, redisKey string, dat
 
 	}
 	return &data, nil
+}
+
+func (re *category_repo) DeleteRedisKey(ctx context.Context, redisKey string) error {
+	err := re.redisClient.Del(ctx, redisKey).Err()
+	if err != nil {
+		return err
+	}
+	return nil
 }

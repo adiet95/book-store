@@ -58,14 +58,8 @@ func (r *book_repo) Save(data *models.Book) (*models.Book, error) {
 }
 
 func (re *book_repo) Update(data *models.Book, id int) (*models.Book, error) {
-	var datas models.Books
 	var dataAuthor models.Author
 	var dataCategory models.Category
-
-	checkName := re.db.Where("LOWER(book_name) LIKE ?", "%"+data.BookName+"%").Find(&datas)
-	if checkName.RowsAffected != 0 {
-		return nil, errors.New("book name is exist")
-	}
 
 	checkAuthor := re.db.Where("author_id = ?", data.AuthorId).First(&dataAuthor)
 	if checkAuthor.Error != nil {

@@ -2,6 +2,7 @@ package category
 
 import (
 	"context"
+	"fmt"
 	"github.com/adiet95/book-store/category-service/src/database/models"
 	"github.com/adiet95/book-store/category-service/src/interfaces"
 	"github.com/adiet95/book-store/category-service/src/libs"
@@ -33,7 +34,14 @@ func (re *category_service) Add(data *models.Category) *libs.Response {
 	return libs.New(result, 200, false)
 }
 
-func (re *category_service) Update(data *models.Category, id int) *libs.Response {
+func (re *category_service) Update(ctx context.Context, data *models.Category, id int) *libs.Response {
+	redisKey := strconv.Itoa(id)
+	var cacheKey = fmt.Sprintf("%v:%v", "category-service", redisKey)
+	errDel := re.category_repo.DeleteRedisKey(ctx, cacheKey)
+	if errDel != nil {
+		return libs.New(errDel.Error(), 400, true)
+	}
+
 	res, err := re.category_repo.Update(data, id)
 	if err != nil {
 		return libs.New(err.Error(), 400, true)
@@ -41,7 +49,14 @@ func (re *category_service) Update(data *models.Category, id int) *libs.Response
 	return libs.New(res, 200, false)
 }
 
-func (re *category_service) Delete(id int) *libs.Response {
+func (re *category_service) Delete(ctx context.Context, id int) *libs.Response {
+	redisKey := strconv.Itoa(id)
+	var cacheKey = fmt.Sprintf("%v:%v", "category-service", redisKey)
+	errDel := re.category_repo.DeleteRedisKey(ctx, cacheKey)
+	if errDel != nil {
+		return libs.New(errDel.Error(), 400, true)
+	}
+
 	data, err := re.category_repo.Delete(id)
 	if err != nil {
 		return libs.New(err.Error(), 400, true)
@@ -59,7 +74,8 @@ func (re *category_service) Search(name string) *libs.Response {
 
 func (re *category_service) SearchId(id int, ctx context.Context) *libs.Response {
 	redisKey := strconv.Itoa(id)
-	categoryData, err := re.category_repo.GetRedisKey(ctx, redisKey)
+	var cacheKey = fmt.Sprintf("%v:%v", "category-service", redisKey)
+	categoryData, err := re.category_repo.GetRedisKey(ctx, cacheKey)
 	if err != nil {
 		switch {
 		case err == redis.Nil:
@@ -67,9 +83,9 @@ func (re *category_service) SearchId(id int, ctx context.Context) *libs.Response
 			if errFind != nil {
 				return libs.New(errFind.Error(), 400, true)
 			}
-			data, errStore := re.category_repo.StoreRedisKey(ctx, redisKey, *dataId)
+			data, errStore := re.category_repo.StoreRedisKey(ctx, cacheKey, *dataId)
 			if errStore != nil {
-				return libs.New(errFind.Error(), 400, true)
+				return libs.New(errStore.Error(), 400, true)
 			}
 			return libs.New(data, 200, false)
 		default:

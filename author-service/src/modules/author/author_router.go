@@ -3,11 +3,12 @@ package author
 import (
 	"github.com/adiet95/book-store/author-service/src/middleware"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 )
 
-func New(rt *gin.Engine, db *gorm.DB) {
-	repo := NewRepo(db)
+func New(rt *gin.Engine, db *gorm.DB, dbRedis *redis.Client) {
+	repo := NewRepo(db, dbRedis)
 	svc := NewService(repo)
 	ctrl := NewCtrl(svc)
 
